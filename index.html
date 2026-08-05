@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meu Blog Futurista</title>
+  <style>
+    /* RESET & VARIAVEIS NEON */
+    :root {
+      --bg-color: #080c14;
+      --card-bg: rgba(15, 23, 42, 0.65);
+      --card-border: rgba(0, 255, 204, 0.2);
+      --neon-green: #00ffcc;
+      --neon-cyan: #00e5ff;
+      --text-color: #e2e8f0;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* BACKGROUND CANVAS */
+    #canvas-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* BARRA DE PROGRESSO DE LEITURA NEON */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
+      box-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-cyan);
+      z-index: 1000;
+      transition: width 0.1s ease-out;
+    }
+
+    /* CONTAINER PRINCIPAL */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+    }
+
+    /* POST CARDS (COM TRANSPARÊNCIA PARA VISIBILIDADE DAS PARTÍCULAS) */
+    .post-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .post-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--neon-cyan);
+    }
+
+    .post-card h2 {
+      color: var(--neon-green);
+      margin-bottom: 15px;
+    }
+
+    .post-card p {
+      line-height: 1.7;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    /* CONTADOR DE LIKES */
+    .like-btn {
+      background: transparent;
+      border: 1px solid var(--neon-green);
+      color: var(--neon-green);
+      padding: 10px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .like-btn:hover {
+      background: rgba(0, 255, 204, 0.1);
+      box-shadow: 0 0 12px rgba(0, 255, 204, 0.4);
+    }
+
+    .like-btn.liked {
+      background: var(--neon-green);
+      color: #000;
+      box-shadow: 0 0 15px var(--neon-green);
+    }
+
+    /* BOTÃO VOLTAR AO TOPO */
+    #back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    #back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    #back-to-top:hover {
+      background: var(--neon-cyan);
+      color: #000;
+      box-shadow: 0 0 20px var(--neon-cyan);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="progress-bar"></div>
+
+  <canvas id="canvas-bg"></canvas>
+
+  <div class="container">
+    <header>
+      <h1>CyberBlog 2026</h1>
+      <p style="color: var(--text-muted); margin-top: 10px;">Tecnologia, Design e Código Futurista</p>
+    </header>
+
+    <main>
+      <article class="post-card">
+        <h2>O Futuro da Web3 e Canvas</h2>
+        <p>Interface futurista combinando alta performance de renderização em HTML5 Canvas com transparências modernas e efeitos Neon dinâmicos.</p>
+        <button class="like-btn" data-post-id="post1">
+          ❤️ <span class="like-count">0</span> Likes
+        </button>
+      </article>
+
+      <article class="post-card">
+        <h2>Experiências Imersivas no Navegador</h2>
+        <p>A interatividade com a entrada do usuário gera um feedback visual contínuo através de física simples de partículas e campos de atração visual.</p>
+        <button class="like-btn" data-post-id="post2">
+          ❤️ <span class="like-count">0</span> Likes
+        </button>
+      </article>
+
+      <article class="post-card">
+        <h2>Design Dark Mode com Efeitos Neon</h2>
+        <p>A combinação de cores ciano (#00e5ff) e verde (#00ffcc) constrói uma estética Cyberpunk limpa e altamente legível para leitura noturna prolongada.</p>
+        <button class="like-btn" data-post-id="post3">
+          ❤️ <span class="like-count">0</span> Likes
+        </button>
+      </article>
+    </main>
+  </div>
+
+  <button id="back-to-top" aria-label="Voltar ao Topo">▲</button>
+
+  <script>
+    /* ==========================================================
+       1. Fundo de Partículas Interativo (HTML5 Canvas)
+       ========================================================== */
+    const canvas = document.getElementById('canvas-bg');
+    const ctx = canvas.getContext('2d');
+
+    let particlesArray = [];
+    const mouse = { x: null, y: null, radius: 120 };
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.x;
+      mouse.y = e.y;
+    });
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = (Math.random() - 0.5) * 1.5;
+        this.speedY = (Math.random() - 0.5) * 1.5;
+        this.color = Math.random() > 0.5 ? '#00ffcc' : '#00e5ff';
+      }
+
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        // Rebater nas bordas
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+
+        // Interação com o Mouse
+        const dx = mouse.x - this.x;
+        const dy = mouse.y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < mouse.radius) {
+          const force = (mouse.radius - distance) / mouse.radius;
+          const dirX = dx / distance;
+          const dirY = dy / distance;
+          this.x -= dirX * force * 3;
+          this.y -= dirY * force * 3;
+        }
+      }
+    }
+
+    function initParticles() {
+      particlesArray = [];
+      const numberOfParticles = Math.floor((canvas.width * canvas.height) / 9000);
+      for (let i = 0; i < numberOfParticles; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particlesArray.forEach((particle) => {
+        particle.update();
+        particle.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+
+    initParticles();
+    animateParticles();
+
+    /* ==========================================================
+       2. Barra de Progresso de Leitura
+       ========================================================== */
+    const progressBar = document.getElementById('progress-bar');
+
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollTop / docHeight) * 100;
+      progressBar.style.width = scrollPercent + '%';
+    });
+
+    /* ==========================================================
+       3. Botão Voltar ao Topo (Smooth Scroll)
+       ========================================================== */
+    const backToTopBtn = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    });
+
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+
+    /* ==========================================================
+       4. Contador de Likes com Persistência em LocalStorage
+       ========================================================== */
+    const likeButtons = document.querySelectorAll('.like-btn');
+
+    likeButtons.forEach((btn) => {
+      const postId = btn.getAttribute('data-post-id');
+      const countSpan = btn.querySelector('.like-count');
+
+      // Carregar estado salvo
+      const savedLikes = parseInt(localStorage.getItem(`likes_${postId}`)) || 0;
+      const isLiked = localStorage.getItem(`user_liked_${postId}`) === 'true';
+
+      countSpan.textContent = savedLikes;
+      if (isLiked) btn.classList.add('liked');
+
+      btn.addEventListener('click', () => {
+        let currentLikes = parseInt(localStorage.getItem(`likes_${postId}`)) || 0;
+        let currentlyLiked = localStorage.getItem(`user_liked_${postId}`) === 'true';
+
+        if (!currentlyLiked) {
+          currentLikes++;
+          localStorage.setItem(`user_liked_${postId}`, 'true');
+          btn.classList.add('liked');
+        } else {
+          currentLikes = Math.max(0, currentLikes - 1);
+          localStorage.setItem(`user_liked_${postId}`, 'false');
+          btn.classList.remove('liked');
+        }
+
+        localStorage.setItem(`likes_${postId}`, currentLikes);
+        countSpan.textContent = currentLikes;
+      });
+    });
+  </script>
+</body>
+</html>
